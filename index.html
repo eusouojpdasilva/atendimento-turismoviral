@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Turismo Viral — Como funciona</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0E0E0E;
+      --bg-alt: #111111;
+      --gold: #C9A84C;
+      --offwhite: #F7F5F0;
+      --cream: #EDE8DF;
+      --cream-muted: #A09A8E;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: var(--bg);
+      color: var(--cream);
+      font-size: 17px;
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── LOADING ── */
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.4s ease;
+    }
+    #loading-screen span {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 6px;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    /* ── SCROLL PROGRESS ── */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--gold);
+      z-index: 9998;
+      transition: width 0.1s linear;
+    }
+
+    /* ── COLUNA DE LEITURA ── */
+    .carta {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── SEÇÕES ── */
+    section {
+      padding: 72px 0;
+    }
+    section:nth-child(even) {
+      background: var(--bg-alt);
+    }
+
+    /* ── LABEL ── */
+    .label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 28px;
+    }
+
+    /* ── TIPOGRAFIA ── */
+    h1 {
+      font-size: clamp(26px, 5vw, 32px);
+      font-weight: 800;
+      color: var(--offwhite);
+      line-height: 1.25;
+      margin-bottom: 40px;
+    }
+
+    h2 {
+      font-size: clamp(20px, 4vw, 24px);
+      font-weight: 700;
+      color: var(--offwhite);
+      line-height: 1.3;
+      margin-bottom: 24px;
+    }
+
+    p {
+      color: var(--cream);
+      margin-bottom: 22px;
+    }
+    p:last-of-type { margin-bottom: 0; }
+
+    /* ── ABERTURA ── */
+    #abertura {
+      padding-top: 96px;
+      padding-bottom: 72px;
+    }
+
+    /* ── ETAPAS ── */
+    .etapas { margin-top: 40px; }
+
+    .etapa {
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+      padding: 36px 0;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.12);
+    }
+    .etapa:last-child { border-bottom: none; }
+
+    .etapa-numero {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1;
+      min-width: 56px;
+      padding-top: 4px;
+      opacity: 0.9;
+    }
+
+    .etapa-body { flex: 1; }
+
+    .etapa-titulo {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--offwhite);
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .etapa-desc {
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--cream);
+      margin-bottom: 0;
+    }
+
+    /* ── FRASE DE IMPACTO ── */
+    .frase-impacto {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--gold);
+      line-height: 1.5;
+      padding: 48px 0 16px;
+      font-style: italic;
+    }
+
+    /* ── ASSINATURA ── */
+    .assinatura {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--offwhite);
+      letter-spacing: 0.5px;
+      margin-top: 36px;
+    }
+
+    /* ── DIVISOR ── */
+    .divisor {
+      width: 40px;
+      height: 2px;
+      background: var(--gold);
+      margin: 48px 0;
+      opacity: 0.5;
+    }
+
+    /* ── CTA ── */
+    #cta-final {
+      padding: 80px 0 96px;
+      text-align: center;
+    }
+
+    .cta-titulo {
+      font-size: clamp(20px, 4vw, 24px);
+      font-weight: 700;
+      color: var(--offwhite);
+      margin-bottom: 16px;
+    }
+
+    .cta-sub {
+      font-size: 15px;
+      color: var(--cream);
+      margin-bottom: 40px;
+    }
+
+    .btn-cta {
+      display: inline-block;
+      background: var(--gold);
+      color: #0E0E0E;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 18px 48px;
+      border-radius: 2px;
+      animation: pulse 2.2s ease-in-out infinite;
+      transition: background 0.2s ease;
+    }
+    .btn-cta:hover {
+      background: #d9b85c;
+      animation: none;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(201, 168, 76, 0); }
+      50% { transform: scale(1.03); box-shadow: 0 0 0 8px rgba(201, 168, 76, 0.12); }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #000;
+      padding: 28px 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--cream-muted);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── ANIMAÇÕES DE ENTRADA ── */
+    .animate {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+    }
+    .animate.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVO ── */
+    @media (max-width: 768px) {
+      section { padding: 56px 0; }
+      #abertura { padding-top: 72px; }
+
+      .etapa { gap: 20px; }
+      .etapa-numero { font-size: 36px; min-width: 44px; }
+
+      .frase-impacto { font-size: 18px; padding: 36px 0 8px; }
+
+      .btn-cta { padding: 16px 32px; font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADING -->
+  <div id="loading-screen">
+    <span>Turismo Viral</span>
+  </div>
+
+  <!-- SCROLL PROGRESS -->
+  <div id="scroll-progress"></div>
+
+  <!-- ── ABERTURA ── -->
+  <section id="abertura">
+    <div class="carta">
+      <span class="label animate">Enquanto você aguarda</span>
+      <h1 class="animate">Deixa eu te contar exatamente o que é o Turismo Viral e como ele funciona na prática.</h1>
+    </div>
+  </section>
+
+  <!-- ── BLOCO 1 — O PROBLEMA ── -->
+  <section id="problema">
+    <div class="carta">
+      <p class="animate">Produzir conteúdo para o Instagram é uma das maiores travações de quem trabalha como agente de viagens. A lógica que a maioria segue é: posta quando dá, improvisa o que vai falar, torce para engajar.</p>
+      <p class="animate">O resultado é sempre o mesmo: muito esforço, pouca conversa com cliente de verdade.</p>
+      <p class="animate">O Turismo Viral existe para resolver exatamente isso. Mas ele resolve de uma forma que a maioria dos cursos de conteúdo não resolve: ele não te ensina a postar mais. Ele instala um sistema que produz com você, organiza o que você faz e garante que cada post tenha uma função real dentro do seu funil.</p>
+    </div>
+  </section>
+
+  <!-- ── BLOCO 2 — O PROGRAMA ── -->
+  <section id="programa">
+    <div class="carta">
+      <span class="label animate">O Programa</span>
+      <p class="animate">O Turismo Viral é um sistema de posicionamento, conteúdo e conversão para agentes de viagens. Ele organiza quatro pontos que normalmente estão soltos em qualquer perfil: posicionamento, conteúdo, visual e atendimento.</p>
+      <p class="animate">Tudo roda dentro do Claude, a IA da Anthropic. Cada etapa do programa tem um agente de IA com função específica. Você não vai aprender a usar IA de forma genérica. Vai aprender a operar um sistema montado para a realidade de quem trabalha com viagens.</p>
+      <p class="animate">O foco não está em crescer perfil. Está em gerar conversas com pessoas certas e transformar essas conversas em reservas.</p>
+    </div>
+  </section>
+
+  <!-- ── BLOCO 3 — ETAPAS ── -->
+  <section id="etapas">
+    <div class="carta">
+      <span class="label animate">Como o sistema funciona</span>
+      <p class="animate">O programa segue um fluxo lógico. Cada etapa prepara a próxima. Nada é isolado.</p>
+
+      <div class="etapas">
+
+        <div class="etapa animate">
+          <div class="etapa-numero">01</div>
+          <div class="etapa-body">
+            <div class="etapa-titulo">Direção inicial</div>
+            <p class="etapa-desc">Antes de qualquer execução, você entende como o sistema funciona como um todo. O que vai construir, como aplicar e o que evitar. Essa etapa existe para garantir que você não pule etapa nem construa na direção errada.</p>
+          </div>
+        </div>
+
+        <div class="etapa animate">
+          <div class="etapa-numero">02</div>
+          <div class="etapa-body">
+            <div class="etapa-titulo">Posicionamento com a Lina</div>
+            <p class="etapa-desc">A Lina é o agente responsável por construir a base. Aqui você define quem quer atrair, qual problema resolve, como se posiciona no mercado e qual mensagem vai sustentar todo o conteúdo. Sem essa etapa, o restante perde força.</p>
+          </div>
+        </div>
+
+        <div class="etapa animate">
+          <div class="etapa-numero">03</div>
+          <div class="etapa-body">
+            <div class="etapa-titulo">Conteúdo e linha editorial com o Toni</div>
+            <p class="etapa-desc">O Toni transforma posicionamento em execução. Você sai dessa etapa com linha editorial clara, pilares de conteúdo definidos, calendário organizado e estrutura de carrossel e reels com ganchos e legendas que têm função. O improviso acaba aqui.</p>
+          </div>
+        </div>
+
+        <div class="etapa animate">
+          <div class="etapa-numero">04</div>
+          <div class="etapa-body">
+            <div class="etapa-titulo">Visual e produção com a Mío</div>
+            <p class="etapa-desc">A Mío cuida da parte visual. Você aprende a criar imagens, criativos para posts e vídeos simples com padrão profissional e consistência. Sem depender de designer, sem depender de aplicativo complicado.</p>
+          </div>
+        </div>
+
+        <div class="etapa animate">
+          <div class="etapa-numero">05</div>
+          <div class="etapa-body">
+            <div class="etapa-titulo">Atendimento e conversão com o Theo</div>
+            <p class="etapa-desc">O Theo fecha o ciclo. Aqui o conteúdo vira venda. Você aprende a conduzir conversas no direct, levar para o WhatsApp com direção, qualificar clientes, responder com mais clareza e fechar com mais segurança.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── BLOCO 4 — O QUE NÃO FAZ ── -->
+  <section id="nao-faz">
+    <div class="carta">
+      <span class="label animate">Antes de continuar</span>
+      <p class="animate">O Turismo Viral não promete crescimento rápido de seguidores. Não depende de viralização. Não ensina truques isolados que funcionam por duas semanas e somem.</p>
+      <p class="animate">Ele também não vai transformar você em influenciadora nem exige que você apareça todos os dias. O que ele faz é organizar o que você já faz, mas sem direção, e colocar um sistema por trás disso.</p>
+    </div>
+  </section>
+
+  <!-- ── BLOCO 5 — RESULTADO ── -->
+  <section id="resultado">
+    <div class="carta">
+      <p class="animate">Quando o sistema está rodando, o conteúdo para de ser aleatório. As conversas no direct mudam de qualidade. O Instagram deixa de ser uma tarefa na lista e vira canal de aquisição.</p>
+      <p class="animate">A agente passa a saber o que postar, por que está postando e o que esperar de cada peça de conteúdo.</p>
+      <p class="frase-impacto animate">"O Instagram para de depender da sua energia do dia."</p>
+    </div>
+  </section>
+
+  <!-- ── BLOCO 6 — QUEM SOU ── -->
+  <section id="sobre">
+    <div class="carta">
+      <span class="label animate">Quem está por trás do sistema</span>
+      <p class="animate">Meu nome é João Paulo. Sou estrategista de IA para o mercado de turismo e opero a Nattiva Travel como laboratório real antes de ensinar qualquer coisa.</p>
+      <p class="animate">O Turismo Viral foi construído para a rotina real de quem trabalha sozinha ou com equipe pequena, atende bem, mas não tem tempo sobrando para produzir conteúdo do zero todo dia.</p>
+    </div>
+  </section>
+
+  <!-- ── BLOCO 7 — FECHAMENTO ── -->
+  <section id="fechamento">
+    <div class="carta">
+      <p class="animate">Você acabou de responder algumas perguntas sobre o seu momento. Isso já me deu contexto suficiente para a nossa conversa.</p>
+      <p class="animate">Quando eu entrar em contato, já vou saber onde está o maior ponto de melhoria no seu processo de conteúdo. A conversa vai ser direta e objetiva.</p>
+      <p class="animate">Se o Turismo Viral fizer sentido para o seu momento, a gente avança. Se não fizer, eu te digo também.</p>
+      <div class="divisor animate"></div>
+      <div class="assinatura animate">JP — @ojpviaja</div>
+    </div>
+  </section>
+
+  <!-- ── CTA FINAL ── -->
+  <section id="cta-final">
+    <div class="carta">
+      <p class="cta-titulo animate">Ficou alguma dúvida antes da nossa conversa?</p>
+      <p class="cta-sub animate">Me chama no WhatsApp. Estou por lá.</p>
+      <a
+        class="btn-cta animate"
+        href="https://wa.me/5561981784728?text=JP%2C%20quero%20aplicar%20o%20m%C3%A9todo%20na%20minha%20ag%C3%AAncia"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Falar com o JP agora
+      </a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    © Turismo Viral · @ojpviaja
+  </footer>
+
+  <script>
+    // Loading screen
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const loading = document.getElementById('loading-screen');
+        loading.style.opacity = '0';
+        setTimeout(() => { loading.style.display = 'none'; }, 400);
+      }, 1200);
+    });
+
+    // Scroll progress
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.body.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      document.getElementById('scroll-progress').style.width = progress + '%';
+    }, { passive: true });
+
+    // Animações de entrada
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.animate').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
